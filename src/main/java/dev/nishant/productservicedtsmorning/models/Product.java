@@ -1,5 +1,8 @@
 package dev.nishant.productservicedtsmorning.models;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,15 +10,17 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+@AllArgsConstructor
+@Entity
+public class Product extends BaseModel {
 
-    private Long id;
     private String title;
     private double price;
     private String description;
     private String imageUrl;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     private Category category;
 
 }

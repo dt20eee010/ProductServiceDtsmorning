@@ -1,14 +1,19 @@
 package dev.nishant.productservicedtsmorning.services;
-
-import dev.nishant.productservicedtsmorning.dtos.FakeStoreCategoriesDtos;
+import dev.nishant.productservicedtsmorning.dtos.ErrorDto;
 import dev.nishant.productservicedtsmorning.dtos.FakeStoreProductDtos;
+import dev.nishant.productservicedtsmorning.dtos.UpdateProductDtos;
+import dev.nishant.productservicedtsmorning.exception.ProductNotFoundExceptions;
 import dev.nishant.productservicedtsmorning.models.Category;
 import dev.nishant.productservicedtsmorning.models.Product;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
-@Service
+@Service("FakeStoreProductService")
 public class FakeStoreProductService implements ProductService{
 
     private RestTemplate restTemplate;
@@ -17,9 +22,17 @@ public class FakeStoreProductService implements ProductService{
         this.restTemplate=restTemplate;
     }
     @Override
-    public Product getSingleProduct(Long productId) {
-        FakeStoreProductDtos fakeStoreProductDtos = restTemplate.getForObject("https://fakestoreapi.com/products/"+productId, FakeStoreProductDtos.class);
-        return fakeStoreProductDtos.toProduct();
+    public Product getSingleProduct(Long productId) throws ProductNotFoundExceptions {
+        ResponseEntity<FakeStoreProductDtos> fakeStoreProductDtos = restTemplate.getForEntity("https://fakestoreapi.com/products/"+productId, FakeStoreProductDtos.class);
+
+        FakeStoreProductDtos fakestoreproduct = fakeStoreProductDtos.getBody();
+        if(fakestoreproduct==null)
+        {
+            throw new ProductNotFoundExceptions("product with id " + productId + " does not exsist!!!!!! retry");
+
+        }
+        return fakestoreproduct.toProduct();
+
     }
 
     @Override
@@ -34,7 +47,7 @@ public class FakeStoreProductService implements ProductService{
         return response.toProduct();
     }
     @Override
-    public Product deleteProduct(Long productId){
+    public Product deleteProduct(Long productId) throws ProductNotFoundExceptions {
         Map<String,String> params = new HashMap<>();
         params.put("id",productId.toString());
         Product product = getSingleProduct(productId);
@@ -91,4 +104,11 @@ public class FakeStoreProductService implements ProductService{
         }
         return listProduct;
     }
+
+    @Override
+    public Product patchProduct(Long productId, String title, double price, String description, String image, String category) {
+        return null;
+    }
+
+
 }

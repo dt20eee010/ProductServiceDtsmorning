@@ -1,18 +1,19 @@
 package dev.nishant.productservicedtsmorning.services;
+import dev.nishant.productservicedtsmorning.dtos.UpdateProductDtos;
+import dev.nishant.productservicedtsmorning.exception.ProductNotFoundExceptions;
 import dev.nishant.productservicedtsmorning.models.Category;
 import dev.nishant.productservicedtsmorning.models.Product;
 import org.springframework.stereotype.Service;
-
-import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public interface ProductService {
-    Product getSingleProduct(Long ProductId);
+    Product getSingleProduct(Long ProductId) throws ProductNotFoundExceptions;
     Product createProduct(String title, double price, String description,String image,String category);
-    Product deleteProduct(Long ProductId);
-    ArrayList<Product> getAllProduct();
+    Product deleteProduct(Long ProductId) throws ProductNotFoundExceptions;
+    List<Product> getAllProduct();
     List<Category> getCategory();
-    List<Product> getProduct(String category);
+    List<Product> getProduct(String Category);
+    Product patchProduct(Long productId,String title, double price, String description, String image, String category);
 }

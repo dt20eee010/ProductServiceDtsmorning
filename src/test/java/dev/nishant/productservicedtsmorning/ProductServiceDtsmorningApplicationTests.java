@@ -10,4 +10,9 @@ class ProductServiceDtsmorningApplicationTests {
     void contextLoads() {
     }
 
+
+    @Test
+    void testingQueries(){
+
+    }
 }
