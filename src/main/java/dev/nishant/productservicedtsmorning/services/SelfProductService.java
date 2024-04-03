@@ -42,7 +42,6 @@ public class SelfProductService implements ProductService{
         Product saveproduct = productRepository.save(product);
         return saveproduct;
     }
-
     @Override
     public Product deleteProduct(Long ProductId) throws ProductNotFoundExceptions {
         Product product = productRepository.findByIdIs(ProductId);
